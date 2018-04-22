@@ -30,3 +30,8 @@ Desktop.ini
 
 # Build files
 dist/*
+
+.temp/
+build/
+package-lock.json
+src/package-lock.json
