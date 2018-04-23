@@ -7,6 +7,8 @@ import { Observable } from 'rxjs/Rx';
 //  El fontSize de  "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
 //  El color de  "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
 
+// Change the type of private var timer to the correct.
+
 
 export interface CircleProgressOptionsInterface {
   class?: string;
@@ -47,6 +49,7 @@ export interface CircleProgressOptionsInterface {
   showBackground?: boolean;
   showInnerStroke?: boolean;
   clockwise?: boolean;
+  endDate?: Date; ///////////////////////////////////// ADDED, DOCUMENT
 }
 
 export class CircleProgressOptions implements CircleProgressOptionsInterface {
@@ -88,6 +91,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   showBackground = true;
   showInnerStroke = true;
   clockwise = true;
+  // endDate = new Date('02/19/2032 10:1 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
+  endDate = new Date('06/14/2018 10:1 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
 }
 
 @Component({
@@ -137,7 +142,7 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
               {{tspan.span}}<tspan [attr.font-size]="svg.subtitle.fontSize"
                 [attr.fill]="svg.subtitle.color"> segundos</tspan>
             </tspan>
-            
+
         </ng-container>
         <tspan *ngIf="options.showUnits"
           [attr.font-size]="svg.units.fontSize"
@@ -205,6 +210,8 @@ export class CircleProgressComponent implements OnChanges {
   @Input() showInnerStroke: boolean;
   @Input() clockwise: boolean;
 
+  @Input() endDate:Date;
+
   @Input('options') templateOptions: CircleProgressOptions;
 
   svg: any;
@@ -214,6 +221,13 @@ export class CircleProgressComponent implements OnChanges {
 
   private _timerSubscription: Subscription;
 
+  //////////////////////////////////////ADDEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+  private second:number;
+  private minute:number;
+  private hour:number;
+  private day:number;
+  // private timer:any; //////////////////////////////////Change this any, to the correct type
+
   public isDrawing(): boolean {
     return (this._timerSubscription && !this._timerSubscription.closed) ? true : false;
   }
@@ -222,11 +236,43 @@ export class CircleProgressComponent implements OnChanges {
     defaultOptions: CircleProgressOptions) {
     Object.assign(this.options, defaultOptions);
     Object.assign(this.defaultOptions, defaultOptions);
+
+    //Eart's time system ;)
+    this.second = 1000;
+    this.minute = this.second * 60;
+    this.hour = this.minute * 60;
+    this.day = this.hour * 24;
+
+    this.calculateReamingTime();
   }
 
   ngOnChanges(changes) {
     this.render();
   }
+
+  private calculateReamingTime():{days:number, hours:number, minutes:number, seconds:number}{
+    let now:Date = new Date();
+
+    let distance:number =  this.options.endDate.getTime() - now.getTime();
+    if (distance < 0) {
+      // clearInterval(this.timer);
+      alert("Ya paso");
+      return null;
+    }
+    ///////Pa bajo
+    let days:number = Math.floor(distance / this.day);
+    let hours:number = Math.floor((distance % this.day) / this.hour);
+    let minutes:number = Math.floor((distance % this.hour) / this.minute);
+    let seconds:number = Math.floor((distance % this.minute) / this.second);
+
+    alert("Faltan dias: " + days);
+    alert("Faltan horas: " + hours);
+    alert("Faltan minutos: " + minutes);
+    alert("Faltan segundos: " + seconds);
+
+    return null; //Change to correct
+  }
+
 
   private applyOptions = () => {
     // the options of <circle-progress> may change already
@@ -300,7 +346,6 @@ export class CircleProgressComponent implements OnChanges {
     let title = {
       x: centre.x,
       y: centre.y,
-      ySecondLine: centre.y + (+this.options.titleFontSize),
       textAnchor: 'middle',
       color: this.options.titleColor,
       fontSize: this.options.titleFontSize,
