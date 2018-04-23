@@ -137,7 +137,7 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
               {{tspan.span}}<tspan [attr.font-size]="svg.subtitle.fontSize"
                 [attr.fill]="svg.subtitle.color"> segundos</tspan>
             </tspan>
-
+            
         </ng-container>
         <tspan *ngIf="options.showUnits"
           [attr.font-size]="svg.units.fontSize"
@@ -300,6 +300,7 @@ export class CircleProgressComponent implements OnChanges {
     let title = {
       x: centre.x,
       y: centre.y,
+      ySecondLine: centre.y + (+this.options.titleFontSize),
       textAnchor: 'middle',
       color: this.options.titleColor,
       fontSize: this.options.titleFontSize,
