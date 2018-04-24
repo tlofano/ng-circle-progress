@@ -22,7 +22,7 @@ export interface CircleProgressOptionsInterface {
   space?: number;
   toFixed?: number;
   maxPercent?: number; ////////////////////////////////////// -> NO MORE
-  renderOnClick?: boolean;
+  renderOnClick?: boolean;  ////////////////////////////////////// -> NO MORE
   units?: string; ////////////////////////////////////// -> HARDCORE TO DAYS
   unitsFontSize?: string;
   unitsColor?: string;
@@ -50,6 +50,7 @@ export interface CircleProgressOptionsInterface {
   showInnerStroke?: boolean;
   clockwise?: boolean;
   endDate?: Date; ///////////////////////////////////// ADDED, DOCUMENT
+  initDate?: Date; ///////////////////////////////////// ADDED, DOCUMENT
 }
 
 export class CircleProgressOptions implements CircleProgressOptionsInterface {
@@ -64,7 +65,7 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   space = 4;
   toFixed = 0;
   maxPercent = 1000; ////////////////////////////////////// -> NO MORE
-  renderOnClick = true;
+  renderOnClick = false;  ////////////////////////////////////// -> NO MORE
   units = ''; ////////////////////////////////////// -> NO MORE EDITABLE - IN THE FUTURE, THIS WILL SET AUTOMATICALLY
   unitsFontSize = '10';
   unitsColor = '#444444';
@@ -92,7 +93,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   showInnerStroke = true;
   clockwise = true;
   // endDate = new Date('02/19/2032 10:1 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
-  endDate = new Date('06/14/2018 10:1 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
+  endDate = new Date('06/14/2018 10:0 AM'); ///////////////////////////////////// ->  TEMPORAL DEFAULT VALUE, DELETE
+  initDate = new Date('04/15/2018 10:0 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
 }
 
 @Component({
@@ -133,13 +135,13 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
             [attr.dy]="tspan.dy"
             [attr.font-size]="svg.title.fontSize"
             [attr.fill]="svg.title.color">
-              {{tspan.span}}<tspan [attr.font-size]="svg.subtitle.fontSize"
+              {{this.daysReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
                 [attr.fill]="svg.subtitle.color"> dias</tspan>
-              {{tspan.span}}<tspan [attr.font-size]="svg.subtitle.fontSize"
+              {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
                 [attr.fill]="svg.subtitle.color"> horas</tspan>
-              {{tspan.span}}<tspan [attr.font-size]="svg.subtitle.fontSize"
+              {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
                 [attr.fill]="svg.subtitle.color"> minutos</tspan>
-              {{tspan.span}}<tspan [attr.font-size]="svg.subtitle.fontSize"
+              {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.fontSize"
                 [attr.fill]="svg.subtitle.color"> segundos</tspan>
             </tspan>
 
@@ -175,7 +177,7 @@ export class CircleProgressComponent implements OnChanges {
   @Input() percent: number; ////////////////////////////////////// -> NO MORE
   @Input() toFixed: number;
   @Input() maxPercent: number; ////////////////////////////////////// -> NO MORE
-  @Input() renderOnClick: boolean;
+  @Input() renderOnClick: boolean;  ////////////////////////////////////// -> NO MORE
 
   units: string; ////////////////////////////////////// -> NO MORE INPUT
   @Input() unitsFontSize: string;
@@ -211,6 +213,7 @@ export class CircleProgressComponent implements OnChanges {
   @Input() clockwise: boolean;
 
   @Input() endDate:Date;
+  @Input() initDate:Date;
 
   @Input('options') templateOptions: CircleProgressOptions;
 
@@ -226,6 +229,11 @@ export class CircleProgressComponent implements OnChanges {
   private minute:number;
   private hour:number;
   private day:number;
+
+  private secondsRemaining:number;
+  private minutesReaming:number;
+  private hoursReaming:number;
+  private daysReaming:number
   // private timer:any; //////////////////////////////////Change this any, to the correct type
 
   public isDrawing(): boolean {
@@ -243,34 +251,54 @@ export class CircleProgressComponent implements OnChanges {
     this.hour = this.minute * 60;
     this.day = this.hour * 24;
 
-    this.calculateReamingTime();
+    this.setValuesReaming();
+
+    Observable.interval(1000).takeWhile(() => true).subscribe(() => this.setValuesReaming());
   }
 
   ngOnChanges(changes) {
     this.render();
   }
 
-  private calculateReamingTime():{days:number, hours:number, minutes:number, seconds:number}{
-    let now:Date = new Date();
+  private setValuesReaming():void{
+    let reaming:{days:number, hours:number, minutes:number, seconds:number} = this.calculateReamingTime();
+    this.secondsRemaining = reaming.seconds;
+    this.minutesReaming = reaming.minutes;
+    this.hoursReaming = reaming.hours;
+    this.daysReaming = reaming.days;
+    this.options.percent = this.calculatePercentage(this.calculateReamingTime(this.options.initDate), this.calculateReamingTime());
+  }
 
+  private calculatePercentage(remainingFromInit:{days:number, hours:number, minutes:number, seconds:number}, remainingFromNow:{days:number, hours:number, minutes:number, seconds:number}):number{
+    let milisecondsFromInit:number = this.acumulateMiliSeconds(remainingFromInit);
+    let milisecondsFromNow:number = this.acumulateMiliSeconds(remainingFromNow);
+    return Math.round(milisecondsFromNow * 100 / milisecondsFromInit);
+  }
+
+  private acumulateMiliSeconds(data:{days:number, hours:number, minutes:number, seconds:number}):number{
+    let accumulator: number = 0
+    accumulator = accumulator + data.seconds;
+    accumulator = accumulator + data.minutes * this.second;
+    accumulator = accumulator + data.hours * this.hour;
+    accumulator = accumulator + data.days * this.day;
+    return accumulator;
+  }
+
+  private calculateReamingTime(initialOptionalDate:Date = null):{days:number, hours:number, minutes:number, seconds:number}{ //Document parameter
+    let now:Date;
+    initialOptionalDate ? now = initialOptionalDate : now = new Date();
     let distance:number =  this.options.endDate.getTime() - now.getTime();
     if (distance < 0) {
       // clearInterval(this.timer);
       alert("Ya paso");
       return null;
     }
-    ///////Pa bajo
     let days:number = Math.floor(distance / this.day);
     let hours:number = Math.floor((distance % this.day) / this.hour);
     let minutes:number = Math.floor((distance % this.hour) / this.minute);
     let seconds:number = Math.floor((distance % this.minute) / this.second);
-
-    alert("Faltan dias: " + days);
-    alert("Faltan horas: " + hours);
-    alert("Faltan minutos: " + minutes);
-    alert("Faltan segundos: " + seconds);
-
-    return null; //Change to correct
+    let resultado:{days:number, hours:number, minutes:number, seconds:number} = {days:days, hours:hours, minutes:minutes, seconds:seconds}
+    return resultado;
   }
 
 
@@ -286,7 +314,8 @@ export class CircleProgressComponent implements OnChanges {
     // make sure key options valid
     this.options.radius = Math.abs(+this.options.radius);
     this.options.space = +this.options.space;
-    this.options.percent = Math.abs(+this.options.percent);
+    // this.options.percent = Math.abs(+this.options.percent); /////////////////// DELETED THIS BASIC PERCENTAGE ASSIGNAMENT
+    this.options.percent = this.calculatePercentage(this.calculateReamingTime(this.options.initDate), this.calculateReamingTime());
     this.options.maxPercent = Math.abs(+this.options.maxPercent);
     this.options.animationDuration = Math.abs(this.options.animationDuration);
     this.options.outerStrokeWidth = Math.abs(+this.options.outerStrokeWidth);
