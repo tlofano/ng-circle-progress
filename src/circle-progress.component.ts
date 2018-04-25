@@ -65,7 +65,7 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   space = 4;
   toFixed = 0;
   maxPercent = 1000; ////////////////////////////////////// -> NO MORE
-  renderOnClick = false;  ////////////////////////////////////// -> NO MORE
+  renderOnClick = true;  ////////////////////////////////////// -> NO MORE
   units = ''; ////////////////////////////////////// -> NO MORE EDITABLE - IN THE FUTURE, THIS WILL SET AUTOMATICALLY
   unitsFontSize = '10';
   unitsColor = '#444444';
@@ -79,15 +79,15 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   titleColor = '#444444';
   titleFontSize = '20';
   subtitleFormat = undefined;
-  subtitle: string|Array<String> = 'faltan'; ////////////////////////////////////// -> NEW DEFAULT
-  subtitleColor = '#A9A9A9';
-  subtitleFontSize = '10';
+  subtitle: string|Array<String> = ''; ////////////////////////////////////// -> NO MORE, DELETE ALL APARITIONS
+  subtitleColor = '#A9A9A9';           ////////////////////////////////////// -> NO MORE, DELETE ALL APARITIONS
+  subtitleFontSize = '10';             ////////////////////////////////////// -> NO MORE, DELETE ALL APARITIONS
   animation = true;
   animateTitle = true;
   animateSubtitle = false;
   animationDuration = 500;
   showTitle = true;
-  showSubtitle = true;
+  showSubtitle = false;  //////////////////////////////////////////////////// -> Think if is necessary delete all subtitle or if is enough with set it to false in default
   showUnits = true;
   showBackground = true;
   showInnerStroke = true;
@@ -127,7 +127,7 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
         alignment-baseline="baseline"
         [attr.x]="svg.circle.cx"
         [attr.y]="svg.circle.cy"
-        [attr.text-anchor]="svg.title.textAnchor">
+        >
         <ng-container *ngIf="options.showTitle">
           <tspan *ngFor="let tspan of svg.title.tspans"
             [attr.x]="svg.title.x"
@@ -195,10 +195,10 @@ export class CircleProgressComponent implements OnChanges {
   @Input() titleColor: string;
   @Input() titleFontSize: string;
 
-  @Input() subtitleFormat: Function;
-  @Input() subtitle: string|string[];
-  @Input() subtitleColor: string;
-  @Input() subtitleFontSize: string;
+  @Input() subtitleFormat: Function; ////////////////////////////////////// -> NO MORE
+  @Input() subtitle: string|string[]; ////////////////////////////////////// -> NO MORE
+  @Input() subtitleColor: string; ////////////////////////////////////// -> NO MORE
+  @Input() subtitleFontSize: string; ////////////////////////////////////// -> NO MORE
 
   @Input() animation: boolean;
   @Input() animateTitle: boolean;
@@ -206,7 +206,7 @@ export class CircleProgressComponent implements OnChanges {
   @Input() animationDuration: number;
 
   @Input() showTitle: boolean;
-  @Input() showSubtitle: boolean;
+  @Input() showSubtitle: boolean; ////////////////////////////////////// -> READ THE DOCUMENT ON INTERFACE
   @Input() showUnits: boolean;
   @Input() showBackground: boolean;
   @Input() showInnerStroke: boolean;
@@ -373,9 +373,10 @@ export class CircleProgressComponent implements OnChanges {
     let subtitlePercent = this.options.animateSubtitle ? percent : this.options.percent;
     // get title object
     let title = {
-      x: centre.x,
+      //x: centre.x, NEW VALUE
+      x: 55,
       y: centre.y,
-      textAnchor: 'middle',
+      textAnchor: 'middle', //No USED MORE
       color: this.options.titleColor,
       fontSize: this.options.titleFontSize,
       texts: [],
