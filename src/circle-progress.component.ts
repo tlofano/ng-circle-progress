@@ -34,7 +34,8 @@ export interface CircleProgressOptionsInterface {
   titleFormat?: Function;
   title?: string|Array<String>;
   titleColor?: string;
-  titleFontSize?: string;
+  daysHoursFontSize?: string;
+  minutesSecondsFontSize?: string;
   subtitleFormat?: Function;
   subtitle?: string|Array<String>;
   subtitleColor?: string;
@@ -77,7 +78,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   titleFormat = undefined;
   title: string|Array<String> = 'auto';
   titleColor = '#444444';
-  titleFontSize = '20';
+  daysHoursFontSize = '20';
+  minutesSecondsFontSize =  '15';
   subtitleFormat = undefined;
   subtitle: string|Array<String> = ''; ////////////////////////////////////// -> NO MORE, DELETE ALL APARITIONS
   subtitleColor = '#A9A9A9';           ////////////////////////////////////// -> NO MORE, DELETE ALL APARITIONS
@@ -128,21 +130,28 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
         [attr.x]="svg.circle.cx"
         [attr.y]="svg.circle.cy"
         >
-        <ng-container *ngIf="options.showTitle">
+       <ng-container *ngIf="options.showTitle">
          <tspan *ngFor="let tspan of svg.title.tspans"
-           [attr.x]="svg.title.x"
-           [attr.y]="svg.title.y"
+           [attr.x]=45
+           [attr.y]=110
            [attr.dy]="tspan.dy"
-           [attr.font-size]="svg.title.fontSize"
+           [attr.font-size]="svg.title.daysHoursFontSize"
            [attr.fill]="svg.title.color">
-             {{this.daysReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-               [attr.fill]="svg.subtitle.color"> dias</tspan>
-             {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
+             {{this.daysReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
+               [attr.fill]="svg.subtitle.color"> días</tspan>
+             {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
                [attr.fill]="svg.subtitle.color"> horas</tspan>
-             {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-               [attr.fill]="svg.subtitle.color"> minutos</tspan>
-             {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-               [attr.fill]="svg.subtitle.color"> segundos</tspan>
+           </tspan>
+           <tspan *ngFor="let tspan of svg.title.tspans"
+             [attr.x]=75
+             [attr.y]=140
+             [attr.dy]="tspan.dy"
+             [attr.font-size]="svg.title.minutesSecondsFontSize"
+             [attr.fill]="svg.title.color">
+             {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
+               [attr.fill]="svg.subtitle.color"> min</tspan>
+             {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
+               [attr.fill]="svg.subtitle.color"> seg</tspan>
            </tspan>
        </ng-container>
         <tspan *ngIf="options.showUnits"
@@ -192,7 +201,8 @@ export class CircleProgressComponent implements OnChanges {
   @Input() titleFormat: Function;
   @Input() title: string|Array<String>;
   @Input() titleColor: string;
-  @Input() titleFontSize: string;
+  @Input() daysHoursFontSize: string;
+  @Input() minutesSecondsFontSize: string;
 
   @Input() subtitleFormat: Function; ////////////////////////////////////// -> NO MORE
   @Input() subtitle: string|string[]; ////////////////////////////////////// -> NO MORE
@@ -377,7 +387,8 @@ export class CircleProgressComponent implements OnChanges {
       y: centre.y,
       textAnchor: 'middle', //No USED MORE
       color: this.options.titleColor,
-      fontSize: this.options.titleFontSize,
+      daysHoursFontSize: this.options.daysHoursFontSize,
+      minutesSecondsFontSize: this.options.minutesSecondsFontSize,
       texts: [],
       tspans: []
     };
@@ -403,7 +414,7 @@ export class CircleProgressComponent implements OnChanges {
     // get subtitle object
     let subtitle = {
       x: centre.x,
-      y: centre.y + (+centre.y) + (+this.options.titleFontSize),
+      y: centre.y + (+centre.y) + (+this.options.daysHoursFontSize),
       textAnchor: 'middle',
       color: this.options.subtitleColor,
       fontSize: this.options.subtitleFontSize,
@@ -566,27 +577,19 @@ export class CircleProgressComponent implements OnChanges {
 
 
 // <ng-container *ngIf="options.showTitle">
-//   <tspan *ngFor="let tspan of svg.title.tspans"
-//     [attr.x]=75
-//     [attr.y]=110
-//     [attr.dy]="tspan.dy"
-//     [attr.font-size]="svg.title.fontSize"
-//     [attr.fill]="svg.title.color">
-//       {{this.daysReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-//         [attr.fill]="svg.subtitle.color"> dias</tspan>
-//       {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-//         [attr.fill]="svg.subtitle.color"> horas</tspan>
-//     </tspan>
-//     <tspan *ngFor="let tspan of svg.title.tspans"
-//       [attr.x]=75
-//       [attr.y]=140
-//       [attr.dy]="tspan.dy"
-//       [attr.font-size]="svg.title.fontSize"
-//       [attr.fill]="svg.title.color">
-//       {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-//         [attr.fill]="svg.subtitle.color"> min</tspan>
-//       {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-//         [attr.fill]="svg.subtitle.color"> seg</tspan>
-//     </tspan>
-//
+//  <tspan *ngFor="let tspan of svg.title.tspans"
+//    [attr.x]="svg.title.x"
+//    [attr.y]="svg.title.y"
+//    [attr.dy]="tspan.dy"
+//    [attr.font-size]="svg.title.fontSize"
+//    [attr.fill]="svg.title.color">
+//      {{this.daysReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
+//        [attr.fill]="svg.subtitle.color"> dias</tspan>
+//      {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
+//        [attr.fill]="svg.subtitle.color"> horas</tspan>
+//      {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
+//        [attr.fill]="svg.subtitle.color"> minutos</tspan>
+//      {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.fontSize"
+//        [attr.fill]="svg.subtitle.color"> segundos</tspan>
+//    </tspan>
 // </ng-container>
