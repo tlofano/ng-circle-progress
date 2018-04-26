@@ -7,7 +7,9 @@ import { Observable } from 'rxjs/Rx';
 //  El fontSize de  "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
 //  El color de  "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
 
-// Change the type of private var timer to the correct.
+// Cuando falten minutos solamentes, que aparezcan bien grandes junto con los segundos!
+
+// Change the type of var timer to the correct.
 
 
 export interface CircleProgressOptionsInterface {
