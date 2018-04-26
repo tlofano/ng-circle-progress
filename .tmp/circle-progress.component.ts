@@ -132,8 +132,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
         >
        <ng-container *ngIf="options.showTitle">
          <tspan *ngFor="let tspan of svg.title.tspans"
-           [attr.x]=45
-           [attr.y]=110
+           [attr.x]=55
+           [attr.y]=125
            [attr.dy]="tspan.dy"
            [attr.font-size]="svg.title.daysHoursFontSize"
            [attr.fill]="svg.title.color">
@@ -143,8 +143,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
                [attr.fill]="svg.subtitle.color"> horas</tspan>
            </tspan>
            <tspan *ngFor="let tspan of svg.title.tspans"
-             [attr.x]=75
-             [attr.y]=140
+             [attr.x]=85
+             [attr.y]=155
              [attr.dy]="tspan.dy"
              [attr.font-size]="svg.title.minutesSecondsFontSize"
              [attr.fill]="svg.title.color">
