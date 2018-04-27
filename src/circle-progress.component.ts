@@ -256,7 +256,7 @@ export class CircleProgressComponent implements OnChanges {
     Object.assign(this.options, defaultOptions);
     Object.assign(this.defaultOptions, defaultOptions);
 
-    //Eart's time system ;)
+    //Earth's time system ;)
     this.second = 1000;
     this.minute = this.second * 60;
     this.hour = this.minute * 60;
