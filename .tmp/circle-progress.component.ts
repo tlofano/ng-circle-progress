@@ -7,7 +7,9 @@ import { Observable } from 'rxjs/Rx';
 //  El fontSize de  "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
 //  El color de  "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
 
-// Change the type of private var timer to the correct.
+// Cuando falten minutos solamentes, que aparezcan bien grandes junto con los segundos!
+
+// Change the type of var timer to the correct.
 
 
 export interface CircleProgressOptionsInterface {
@@ -110,7 +112,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
         [attr.r]="svg.backgroundCircle.r"
         [attr.fill]="svg.backgroundCircle.fill"
         [attr.fill-opacity]="svg.backgroundCircle.fillOpacity"
-        [attr.stroke]="svg.backgroundCircle.stroke"
+        [attr.stroke]="'#000000'"
+        [attr.stroke-opacity]=0.3
         [attr.stroke-width]="svg.backgroundCircle.strokeWidth"/>
       <circle *ngIf="options.showInnerStroke"
         [attr.cx]="svg.circle.cx"
@@ -254,7 +257,7 @@ export class CircleProgressComponent implements OnChanges {
     Object.assign(this.options, defaultOptions);
     Object.assign(this.defaultOptions, defaultOptions);
 
-    //Eart's time system ;)
+    //Earth's time system ;)
     this.second = 1000;
     this.minute = this.second * 60;
     this.hour = this.minute * 60;

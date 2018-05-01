@@ -112,7 +112,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
         [attr.r]="svg.backgroundCircle.r"
         [attr.fill]="svg.backgroundCircle.fill"
         [attr.fill-opacity]="svg.backgroundCircle.fillOpacity"
-        [attr.stroke]="svg.backgroundCircle.stroke"
+        [attr.stroke]="'#000000'"
+        [attr.stroke-opacity]=0.3
         [attr.stroke-width]="svg.backgroundCircle.strokeWidth"/>
       <circle *ngIf="options.showInnerStroke"
         [attr.cx]="svg.circle.cx"
