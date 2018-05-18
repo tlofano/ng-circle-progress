@@ -54,6 +54,8 @@ export interface CircleProgressOptionsInterface {
   clockwise?: boolean;
   endDate?: Date; ///////////////////////////////////// ADDED, DOCUMENT
   initDate?: Date; ///////////////////////////////////// ADDED, DOCUMENT
+  days?: string;
+  hours?: string;
 }
 
 export class CircleProgressOptions implements CircleProgressOptionsInterface {
@@ -99,6 +101,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   // endDate = new Date('02/19/2032 10:1 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
   endDate = new Date('06/14/2018 10:0 AM'); ///////////////////////////////////// ->  TEMPORAL DEFAULT VALUE, DELETE
   initDate = new Date('04/15/2018 10:0 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
+  days = "days";
+  hours = "hours";
 }
 
 @Component({
@@ -141,9 +145,9 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
            [attr.font-size]="svg.title.daysHoursFontSize"
            [attr.fill]="svg.title.color">
              {{this.daysReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
-               [attr.fill]="svg.subtitle.color"> días</tspan>
+               [attr.fill]="svg.subtitle.color"> {{this.options.days}}</tspan>
              {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
-               [attr.fill]="svg.subtitle.color"> horas</tspan>
+               [attr.fill]="svg.subtitle.color"> {{this.options.hours}}</tspan>
            </tspan>
            <tspan *ngFor="let tspan of svg.title.tspans"
              [attr.x]=85
@@ -226,6 +230,8 @@ export class CircleProgressComponent implements OnChanges {
 
   @Input() endDate:Date;
   @Input() initDate:Date;
+  @Input() days:string;
+  @Input() hours:string;
 
   @Input('options') templateOptions: CircleProgressOptions;
 
