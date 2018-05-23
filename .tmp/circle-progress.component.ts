@@ -179,6 +179,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
 export class CircleProgressComponent implements OnChanges {
 
   @Output() onClick: EventEmitter<any> = new EventEmitter();
+  @Output() onCompletedTime: EventEmitter<any> = new EventEmitter();
+  @Output() isTimeReaming: EventEmitter<any> = new EventEmitter();
 
   @Input() class: string;
   @Input() backgroundColor: string;
@@ -248,6 +250,8 @@ export class CircleProgressComponent implements OnChanges {
   private hour:number;
   private day:number;
 
+  private everySecond:Subscription;
+
   private secondsRemaining:number;
   private minutesReaming:number;
   private hoursReaming:number;
@@ -271,7 +275,7 @@ export class CircleProgressComponent implements OnChanges {
 
     this.setValuesReaming();
 
-    Observable.interval(1000).takeWhile(() => true).subscribe(() => this.setValuesReaming());
+    this.everySecond = Observable.interval(1000).takeWhile(() => true).subscribe(() => this.setValuesReaming());
   }
 
   ngOnChanges(changes) {
@@ -307,9 +311,14 @@ export class CircleProgressComponent implements OnChanges {
     initialOptionalDate ? now = initialOptionalDate : now = new Date();
     let distance:number =  this.options.endDate.getTime() - now.getTime();
     if (distance < 0) {
-      // clearInterval(this.timer);
-      alert("Ya paso");
-      return null;
+      let days:number = 0;
+      let hours:number = 0;
+      let minutes:number = 0;
+      let seconds:number = 0;
+      let resultado:{days:number, hours:number, minutes:number, seconds:number} = {days:days, hours:hours, minutes:minutes, seconds:seconds}
+      if(this.everySecond) this.everySecond.unsubscribe();
+      this.onCompletedTimeEmitter();
+      return resultado;
     }
     let days:number = Math.floor(distance / this.day);
     let hours:number = Math.floor((distance % this.day) / this.hour);
@@ -317,6 +326,10 @@ export class CircleProgressComponent implements OnChanges {
     let seconds:number = Math.floor((distance % this.minute) / this.second);
     let resultado:{days:number, hours:number, minutes:number, seconds:number} = {days:days, hours:hours, minutes:minutes, seconds:seconds}
     return resultado;
+  }
+
+  private onCompletedTimeEmitter():void {
+    this.onCompletedTime.emit(true);
   }
 
 
