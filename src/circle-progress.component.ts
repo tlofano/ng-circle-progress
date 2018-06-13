@@ -137,15 +137,37 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
         [attr.x]="svg.circle.cx"
         [attr.y]="svg.circle.cy"
         >
-       <ng-container *ngIf="options.showTitle">
+       <ng-container *ngIf="options.showTitle && this.daysReaming > 0">
          <tspan *ngFor="let tspan of svg.title.tspans"
-           [attr.x]=55
+           [attr.x]=68
            [attr.y]=125
            [attr.dy]="tspan.dy"
            [attr.font-size]="svg.title.daysHoursFontSize"
            [attr.fill]="svg.title.color">
              {{this.daysReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
                [attr.fill]="svg.subtitle.color"> {{this.options.days}}</tspan>
+             {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
+               [attr.fill]="svg.subtitle.color"> {{this.options.hours}}</tspan>
+           </tspan>
+           <tspan *ngFor="let tspan of svg.title.tspans"
+             [attr.x]=85
+             [attr.y]=155
+             [attr.dy]="tspan.dy"
+             [attr.font-size]="svg.title.minutesSecondsFontSize"
+             [attr.fill]="svg.title.color">
+             {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
+               [attr.fill]="svg.subtitle.color"> min</tspan>
+             {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
+               [attr.fill]="svg.subtitle.color"> seg</tspan>
+           </tspan>
+       </ng-container>
+       <ng-container *ngIf="options.showTitle && this.daysReaming <=0">
+         <tspan *ngFor="let tspan of svg.title.tspans"
+           [attr.x]=90
+           [attr.y]=125
+           [attr.dy]="tspan.dy"
+           [attr.font-size]="svg.title.daysHoursFontSize"
+           [attr.fill]="svg.title.color">
              {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
                [attr.fill]="svg.subtitle.color"> {{this.options.hours}}</tspan>
            </tspan>
