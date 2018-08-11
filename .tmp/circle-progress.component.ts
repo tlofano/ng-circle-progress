@@ -19,7 +19,7 @@ export interface CircleProgressOptionsInterface {
   backgroundStroke?: string;
   backgroundStrokeWidth?: number;
   backgroundPadding?: number;
-  percent?: number; ////////////////////////////////////// -> NO MORE
+  percent?: number;
   radius?: number;
   space?: number;
   toFixed?: number;
@@ -65,11 +65,11 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   backgroundStroke = 'transparent';
   backgroundStrokeWidth = 0;
   backgroundPadding = 5;
-  percent = 0; ////////////////////////////////////// -> NO MORE
+  percent = 0;
   radius = 90;
   space = 4;
   toFixed = 0;
-  maxPercent = 1000; ////////////////////////////////////// -> NO MORE
+  maxPercent = 1000;
   renderOnClick = true;  ////////////////////////////////////// -> NO MORE
   units = ''; ////////////////////////////////////// -> NO MORE EDITABLE - IN THE FUTURE, THIS WILL SET AUTOMATICALLY
   unitsFontSize = '10';
@@ -99,7 +99,7 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   showInnerStroke = true;
   clockwise = true;
   // endDate = new Date('02/19/2032 10:1 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
-  endDate = new Date('06/14/2018 10:0 AM'); ///////////////////////////////////// ->  TEMPORAL DEFAULT VALUE, DELETE
+  endDate = new Date('08/14/2018 10:0 AM'); ///////////////////////////////////// ->  TEMPORAL DEFAULT VALUE, DELETE
   initDate = new Date('04/15/2018 10:0 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
   days = "days";
   hours = "hours";
@@ -213,7 +213,6 @@ export class CircleProgressComponent implements OnChanges {
 
   @Input() radius: number;
   @Input() space: number;
-  @Input() percent: number; ////////////////////////////////////// -> NO MORE
   @Input() toFixed: number;
   @Input() maxPercent: number; ////////////////////////////////////// -> NO MORE
   @Input() renderOnClick: boolean;  ////////////////////////////////////// -> NO MORE
