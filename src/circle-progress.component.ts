@@ -214,7 +214,6 @@ export class CircleProgressComponent implements OnChanges {
   @Input() radius: number;
   @Input() space: number;
   @Input() toFixed: number;
-  @Input() maxPercent: number; ////////////////////////////////////// -> NO MORE
   @Input() renderOnClick: boolean;  ////////////////////////////////////// -> NO MORE
 
   units: string; ////////////////////////////////////// -> NO MORE INPUT
