@@ -2,7 +2,7 @@ import { Component, ViewChild, OnChanges, Input, Output, EventEmitter } from '@a
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Rx';
 
-//// TODO:
+// TODO:
 //  La palabra "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
 //  El fontSize de  "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
 //  El color de  "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
@@ -23,11 +23,8 @@ export interface CircleProgressOptionsInterface {
   radius?: number;
   space?: number;
   toFixed?: number;
-  maxPercent?: number; ////////////////////////////////////// -> NO MORE
-  renderOnClick?: boolean;  ////////////////////////////////////// -> NO MORE
-  units?: string; ////////////////////////////////////// -> HARDCORE TO DAYS
-  unitsFontSize?: string;
-  unitsColor?: string;
+  maxPercent?: number;
+  renderOnClick?: boolean;
   outerStrokeWidth?: number;
   outerStrokeColor?: string;
   outerStrokeLinecap?: string;
@@ -38,24 +35,21 @@ export interface CircleProgressOptionsInterface {
   titleColor?: string;
   daysHoursFontSize?: string;
   minutesSecondsFontSize?: string;
-  subtitleFormat?: Function;
-  subtitle?: string|Array<String>;
-  subtitleColor?: string;
-  subtitleFontSize?: string;
   animation?: boolean;
   animateTitle?: boolean;
   animateSubtitle?: boolean;
   animationDuration?: number;
-  showTitle?: boolean;
-  showSubtitle?: boolean;
-  showUnits?: boolean;
+  showContent?: boolean;
   showBackground?: boolean;
   showInnerStroke?: boolean;
   clockwise?: boolean;
-  endDate?: Date; ///////////////////////////////////// ADDED, DOCUMENT
-  initDate?: Date; ///////////////////////////////////// ADDED, DOCUMENT
+  endDate?: Date;
+  initDate?: Date;
   days?: string;
   hours?: string;
+  minutes?: string;
+  seconds?: string;
+  stringColor?: string;
 }
 
 export class CircleProgressOptions implements CircleProgressOptionsInterface {
@@ -70,10 +64,7 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   space = 4;
   toFixed = 0;
   maxPercent = 1000;
-  renderOnClick = true;  ////////////////////////////////////// -> NO MORE
-  units = ''; ////////////////////////////////////// -> NO MORE EDITABLE - IN THE FUTURE, THIS WILL SET AUTOMATICALLY
-  unitsFontSize = '10';
-  unitsColor = '#444444';
+  renderOnClick = true;
   outerStrokeWidth = 8;
   outerStrokeColor = '#78C000';
   outerStrokeLinecap = 'round';
@@ -84,25 +75,21 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   titleColor = '#444444';
   daysHoursFontSize = '20';
   minutesSecondsFontSize =  '15';
-  subtitleFormat = undefined;
-  subtitle: string|Array<String> = ''; ////////////////////////////////////// -> NO MORE, DELETE ALL APARITIONS
-  subtitleColor = '#A9A9A9';           ////////////////////////////////////// -> NO MORE, DELETE ALL APARITIONS
-  subtitleFontSize = '10';             ////////////////////////////////////// -> NO MORE, DELETE ALL APARITIONS
   animation = true;
   animateTitle = true;
   animateSubtitle = false;
   animationDuration = 500;
-  showTitle = true;
-  showSubtitle = false;  //////////////////////////////////////////////////// -> Think if is necessary delete all subtitle or if is enough with set it to false in default
-  showUnits = true;
+  showContent= true;
   showBackground = true;
   showInnerStroke = true;
   clockwise = true;
-  // endDate = new Date('02/19/2032 10:1 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
-  endDate = new Date('08/14/2018 10:0 AM'); ///////////////////////////////////// ->  TEMPORAL DEFAULT VALUE, DELETE
-  initDate = new Date('04/15/2018 10:0 AM'); ///////////////////////////////////// -> DEFAULT VALUE, DOCUMENT
+  endDate = new Date('08/14/2030 10:0 AM');
+  initDate = new Date('04/15/2018 10:0 AM');
   days = "days";
   hours = "hours";
+  minutes = "min";
+  seconds = "sec";
+  stringColor = '#e6ea00';
 }
 
 @Component({
@@ -132,12 +119,12 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
         [attr.stroke-width]="svg.path.strokeWidth"
         [attr.stroke-linecap]="svg.path.strokeLinecap"
         [attr.fill]="svg.path.fill"/>
-      <text *ngIf="options.showTitle || options.showUnits || options.showSubtitle"
+      <text *ngIf="options.showContent"
         alignment-baseline="baseline"
         [attr.x]="svg.circle.cx"
         [attr.y]="svg.circle.cy"
         >
-       <ng-container *ngIf="options.showTitle && this.daysReaming > 0">
+       <ng-container *ngIf="options.showContent && this.daysReaming > 0">
          <tspan *ngFor="let tspan of svg.title.tspans"
            [attr.x]=68
            [attr.y]=125
@@ -156,12 +143,12 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
              [attr.font-size]="svg.title.minutesSecondsFontSize"
              [attr.fill]="svg.title.color">
              {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
-               [attr.fill]="svg.subtitle.color"> min</tspan>
+               [attr.fill]="svg.subtitle.color"> {{this.options.minutes}}</tspan>
              {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
-               [attr.fill]="svg.subtitle.color"> seg</tspan>
+               [attr.fill]="svg.subtitle.color"> {{this.options.seconds}}</tspan>
            </tspan>
        </ng-container>
-       <ng-container *ngIf="options.showTitle && this.daysReaming <=0">
+       <ng-container *ngIf="options.showContent && this.daysReaming <= 0">
          <tspan *ngFor="let tspan of svg.title.tspans"
            [attr.x]=90
            [attr.y]=125
@@ -178,22 +165,11 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
              [attr.font-size]="svg.title.minutesSecondsFontSize"
              [attr.fill]="svg.title.color">
              {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
-               [attr.fill]="svg.subtitle.color"> min</tspan>
+               [attr.fill]="svg.subtitle.color"> {{this.options.minutes}}</tspan>
              {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
-               [attr.fill]="svg.subtitle.color"> seg</tspan>
+               [attr.fill]="svg.subtitle.color"> {{this.options.seconds}}</tspan>
            </tspan>
        </ng-container>
-        <tspan *ngIf="options.showUnits"
-          [attr.font-size]="svg.units.fontSize"
-          [attr.fill]="svg.units.color">{{svg.units.text}}</tspan>
-        <ng-container *ngIf="options.showSubtitle">
-          <tspan *ngFor="let tspan of svg.subtitle.tspans"
-            [attr.x]="svg.subtitle.x"
-            [attr.y]="svg.subtitle.y"
-            [attr.dy]="tspan.dy"
-            [attr.font-size]="svg.subtitle.fontSize"
-            [attr.fill]="svg.subtitle.color">{{tspan.span}}</tspan>
-        </ng-container>
       </text>
     </svg>
   `
@@ -214,12 +190,7 @@ export class CircleProgressComponent implements OnChanges {
   @Input() radius: number;
   @Input() space: number;
   @Input() toFixed: number;
-  @Input() maxPercent: number; ////////////////////////////////////// -> NO MORE
-  @Input() renderOnClick: boolean;  ////////////////////////////////////// -> NO MORE
-
-  units: string; ////////////////////////////////////// -> NO MORE INPUT
-  @Input() unitsFontSize: string;
-  @Input() unitsColor: string;
+  @Input() renderOnClick: boolean;
 
   @Input() outerStrokeWidth: number;
   @Input() outerStrokeColor: string;
@@ -234,19 +205,11 @@ export class CircleProgressComponent implements OnChanges {
   @Input() daysHoursFontSize: string;
   @Input() minutesSecondsFontSize: string;
 
-  @Input() subtitleFormat: Function; ////////////////////////////////////// -> NO MORE
-  @Input() subtitle: string|string[]; ////////////////////////////////////// -> NO MORE
-  @Input() subtitleColor: string; ////////////////////////////////////// -> NO MORE
-  @Input() subtitleFontSize: string; ////////////////////////////////////// -> NO MORE
-
   @Input() animation: boolean;
   @Input() animateTitle: boolean;
-  @Input() animateSubtitle: boolean;
   @Input() animationDuration: number;
 
-  @Input() showTitle: boolean;
-  @Input() showSubtitle: boolean; ////////////////////////////////////// -> READ THE DOCUMENT ON INTERFACE
-  @Input() showUnits: boolean;
+  @Input() showContent: boolean;
   @Input() showBackground: boolean;
   @Input() showInnerStroke: boolean;
   @Input() clockwise: boolean;
@@ -255,6 +218,9 @@ export class CircleProgressComponent implements OnChanges {
   @Input() initDate:Date;
   @Input() days:string;
   @Input() hours:string;
+  @Input() minutes:string;
+  @Input() seconds:string;
+  @Input() stringColor: string;
 
   @Input('options') templateOptions: CircleProgressOptions;
 
@@ -276,7 +242,7 @@ export class CircleProgressComponent implements OnChanges {
   private secondsRemaining:number;
   private minutesReaming:number;
   private hoursReaming:number;
-  private daysReaming:number
+  private daysReaming:number;
   // private timer:any; //////////////////////////////////Change this any, to the correct type
 
   public isDrawing(): boolean {
@@ -459,47 +425,18 @@ export class CircleProgressComponent implements OnChanges {
       x: centre.x,
       y: centre.y + (+centre.y) + (+this.options.daysHoursFontSize),
       textAnchor: 'middle',
-      color: this.options.subtitleColor,
-      fontSize: this.options.subtitleFontSize,
+      color: this.options.stringColor,
       texts: [],
       tspans: []
     }
-    // from v0.9.9, both subtitle and subtitleFormat(...) may be an array of string.
-    if(this.options.subtitleFormat !== undefined && this.options.subtitleFormat.constructor.name === 'Function'){
-      let formatted = this.options.subtitleFormat(subtitlePercent);
-      if(formatted instanceof Array){
-        subtitle.texts = [...formatted];
-      }else{
-        subtitle.texts.push(formatted.toString());
-      }
-    }else{
-      if(this.options.subtitle instanceof Array){
-        subtitle.texts = [...this.options.subtitle]
-      }else{
-        subtitle.texts.push(this.options.subtitle.toString());
-      }
-    }
-    // get units object
-    let units = {
-      text: `${this.options.units}`,
-      fontSize: this.options.unitsFontSize,
-      color: this.options.unitsColor
-    }
     // get total count of text lines to be shown
     let rowCount = 0, rowNum = 1;
-    this.options.showTitle && (rowCount += title.texts.length);
-    this.options.showSubtitle && (rowCount += subtitle.texts.length);
+    this.options.showContent && (rowCount += title.texts.length);
+    this.options.showContent && (rowCount += subtitle.texts.length);
     // calc dy for each tspan for title
-    if(this.options.showTitle){
+    if(this.options.showContent){
       for(let span of title.texts){
         title.tspans.push({span: span, dy: this.getRelativeY(rowNum, rowCount)});
-        rowNum++;
-      }
-    }
-    // calc dy for each tspan for subtitle
-    if(this.options.showSubtitle){
-      for(let span of subtitle.texts){
-        subtitle.tspans.push({span: span, dy: this.getRelativeY(rowNum, rowCount)})
         rowNum++;
       }
     }
@@ -534,7 +471,6 @@ export class CircleProgressComponent implements OnChanges {
         strokeWidth: this.options.innerStrokeWidth,
       },
       title: title,
-      units: units,
       subtitle: subtitle,
     };
   }
@@ -615,24 +551,3 @@ export class CircleProgressComponent implements OnChanges {
   }
 
 }
-
-
-
-
-// <ng-container *ngIf="options.showTitle">
-//  <tspan *ngFor="let tspan of svg.title.tspans"
-//    [attr.x]="svg.title.x"
-//    [attr.y]="svg.title.y"
-//    [attr.dy]="tspan.dy"
-//    [attr.font-size]="svg.title.fontSize"
-//    [attr.fill]="svg.title.color">
-//      {{this.daysReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-//        [attr.fill]="svg.subtitle.color"> dias</tspan>
-//      {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-//        [attr.fill]="svg.subtitle.color"> horas</tspan>
-//      {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-//        [attr.fill]="svg.subtitle.color"> minutos</tspan>
-//      {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.fontSize"
-//        [attr.fill]="svg.subtitle.color"> segundos</tspan>
-//    </tspan>
-// </ng-container>
