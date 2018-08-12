@@ -3,10 +3,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Rx';
 
 // TODO:
-//  La palabra "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
-//  El fontSize de  "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
-//  El color de  "dia", "hora", "minuto" y "segundo" SER ATRIBUTOS
-
 // Cuando falten minutos solamentes, que aparezcan bien grandes junto con los segundos!
 
 // Change the type of var timer to the correct.
@@ -50,6 +46,9 @@ export interface CircleProgressOptionsInterface {
   minutes?: string;
   seconds?: string;
   stringColor?: string;
+  daysInitialXY?:Array<number>;
+  hoursInitialXY?:Array<number>;
+  minutesSecondsInitialXY?:Array<number>;
 }
 
 export class CircleProgressOptions implements CircleProgressOptionsInterface {
@@ -90,6 +89,9 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   minutes = "min";
   seconds = "sec";
   stringColor = '#e6ea00';
+  daysInitialXY = [68, 125];
+  hoursInitialXY = [90, 125];
+  minutesSecondsInitialXY= [85, 155];
 }
 
 @Component({
@@ -126,8 +128,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
         >
        <ng-container *ngIf="options.showContent && this.daysReaming > 0">
          <tspan *ngFor="let tspan of svg.title.tspans"
-           [attr.x]=68
-           [attr.y]=125
+           [attr.x]=this.options.daysInitialXY[0]
+           [attr.y]=this.options.daysInitialXY[1]
            [attr.dy]="tspan.dy"
            [attr.font-size]="svg.title.daysHoursFontSize"
            [attr.fill]="svg.title.color">
@@ -137,8 +139,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
                [attr.fill]="svg.subtitle.color"> {{this.options.hours}}</tspan>
            </tspan>
            <tspan *ngFor="let tspan of svg.title.tspans"
-             [attr.x]=85
-             [attr.y]=155
+             [attr.x]=this.options.minutesSecondsInitialXY[0]
+             [attr.y]=this.options.minutesSecondsInitialXY[1]
              [attr.dy]="tspan.dy"
              [attr.font-size]="svg.title.minutesSecondsFontSize"
              [attr.fill]="svg.title.color">
@@ -150,8 +152,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
        </ng-container>
        <ng-container *ngIf="options.showContent && this.daysReaming <= 0">
          <tspan *ngFor="let tspan of svg.title.tspans"
-           [attr.x]=90
-           [attr.y]=125
+           [attr.x]=this.options.hoursInitialXY[0]
+           [attr.y]=this.options.hoursInitialXY[1]
            [attr.dy]="tspan.dy"
            [attr.font-size]="svg.title.daysHoursFontSize"
            [attr.fill]="svg.title.color">
@@ -159,8 +161,8 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
                [attr.fill]="svg.subtitle.color"> {{this.options.hours}}</tspan>
            </tspan>
            <tspan *ngFor="let tspan of svg.title.tspans"
-             [attr.x]=85
-             [attr.y]=155
+             [attr.x]=this.options.minutesSecondsInitialXY[0]
+             [attr.y]=this.options.minutesSecondsInitialXY[1]
              [attr.dy]="tspan.dy"
              [attr.font-size]="svg.title.minutesSecondsFontSize"
              [attr.fill]="svg.title.color">
@@ -221,6 +223,9 @@ export class CircleProgressComponent implements OnChanges {
   @Input() minutes:string;
   @Input() seconds:string;
   @Input() stringColor: string;
+  @Input() daysInitialXY:Array<number>;
+  @Input() hoursInitialXY:Array<number>;
+  @Input() minutesSecondsInitialXY:Array<number>;
 
   @Input('options') templateOptions: CircleProgressOptions;
 
@@ -231,7 +236,6 @@ export class CircleProgressComponent implements OnChanges {
 
   private _timerSubscription: Subscription;
 
-  //////////////////////////////////////ADDEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
   private second:number;
   private minute:number;
   private hour:number;
@@ -243,7 +247,6 @@ export class CircleProgressComponent implements OnChanges {
   private minutesReaming:number;
   private hoursReaming:number;
   private daysReaming:number;
-  // private timer:any; //////////////////////////////////Change this any, to the correct type
 
   public isDrawing(): boolean {
     return (this._timerSubscription && !this._timerSubscription.closed) ? true : false;
@@ -332,7 +335,6 @@ export class CircleProgressComponent implements OnChanges {
     // make sure key options valid
     this.options.radius = Math.abs(+this.options.radius);
     this.options.space = +this.options.space;
-    // this.options.percent = Math.abs(+this.options.percent); /////////////////// DELETED THIS BASIC PERCENTAGE ASSIGNAMENT
     this.options.percent = this.calculatePercentage(this.calculateReamingTime(this.options.initDate), this.calculateReamingTime());
     this.options.maxPercent = Math.abs(+this.options.maxPercent);
     this.options.animationDuration = Math.abs(this.options.animationDuration);
