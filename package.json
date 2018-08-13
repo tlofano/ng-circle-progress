@@ -27,7 +27,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tlofano/ng-circle-progress/issues  "
+    "url": "https://github.com/tlofano/ng-circle-progress-day-countdown/issues"
   },
   "devDependencies": {
     "@angular/common": "^4.0.0",

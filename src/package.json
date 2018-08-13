@@ -1,14 +1,13 @@
 {
-  "name": "ng-circle-progress",
-  "version": "0.9.9",
-  "description": "A simple circle progress component created for Angular 4 based only on SVG graphics",
+  "name": "ng-circle-progress-day-countdown",
+  "version": "0.10.0",
+  "description": "A simple circle progress day component created for Angular 4 based only on SVG graphics",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bootsoon/ng-circle-progress"
+    "url": "https://github.com/tlofano/ng-circle-progress-day-countdown"
   },
   "author": {
-    "name": "bootsoon",
-    "email": "bootsoon@aliyun.com"
+    "name": "tlofnao"
   },
   "keywords": [
     "angular",
@@ -18,7 +17,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bootsoon/ng-circle-progress/issues"
+    "url": "https://github.com/tlofano/ng-circle-progress-day-countdown"
   },
   "module": "ng-circle-progress.js",
   "typings": "ng-circle-progress.d.ts",
