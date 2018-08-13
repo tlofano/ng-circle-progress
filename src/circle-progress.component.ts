@@ -15,9 +15,6 @@ export interface CircleProgressOptionsInterface {
   toFixed?: number;
   maxPercent?: number;
   renderOnClick?: boolean;
-  units?: string;
-  unitsFontSize?: string;
-  unitsColor?: string;
   outerStrokeWidth?: number;
   outerStrokeColor?: string;
   outerStrokeLinecap?: string;
@@ -26,21 +23,26 @@ export interface CircleProgressOptionsInterface {
   titleFormat?: Function;
   title?: string|Array<String>;
   titleColor?: string;
-  titleFontSize?: string;
-  subtitleFormat?: Function;
-  subtitle?: string|Array<String>;
-  subtitleColor?: string;
-  subtitleFontSize?: string;
+  daysHoursFontSize?: string;
+  minutesSecondsFontSize?: string;
   animation?: boolean;
   animateTitle?: boolean;
   animateSubtitle?: boolean;
   animationDuration?: number;
-  showTitle?: boolean;
-  showSubtitle?: boolean;
-  showUnits?: boolean;
+  showContent?: boolean;
   showBackground?: boolean;
   showInnerStroke?: boolean;
   clockwise?: boolean;
+  endDate?: Date;
+  initDate?: Date;
+  days?: string;
+  hours?: string;
+  minutes?: string;
+  seconds?: string;
+  stringColor?: string;
+  daysInitialXY?:Array<number>;
+  hoursInitialXY?:Array<number>;
+  minutesSecondsInitialXY?:Array<number>;
 }
 
 export class CircleProgressOptions implements CircleProgressOptionsInterface {
@@ -56,9 +58,6 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   toFixed = 0;
   maxPercent = 1000;
   renderOnClick = true;
-  units = '%';
-  unitsFontSize = '10';
-  unitsColor = '#444444';
   outerStrokeWidth = 8;
   outerStrokeColor = '#78C000';
   outerStrokeLinecap = 'round';
@@ -67,80 +66,115 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   titleFormat = undefined;
   title: string|Array<String> = 'auto';
   titleColor = '#444444';
-  titleFontSize = '20';
-  subtitleFormat = undefined;
-  subtitle: string|Array<String> = 'progress';
-  subtitleColor = '#A9A9A9';
-  subtitleFontSize = '10';
+  daysHoursFontSize = '20';
+  minutesSecondsFontSize =  '15';
   animation = true;
   animateTitle = true;
   animateSubtitle = false;
   animationDuration = 500;
-  showTitle = true;
-  showSubtitle = true;
-  showUnits = true;
+  showContent= true;
   showBackground = true;
   showInnerStroke = true;
   clockwise = true;
+  endDate = new Date('08/14/2030 10:0 AM');
+  initDate = new Date('04/15/2018 10:0 AM');
+  days = "days";
+  hours = "hours";
+  minutes = "min";
+  seconds = "sec";
+  stringColor = '#e6ea00';
+  daysInitialXY = [68, 125];
+  hoursInitialXY = [90, 125];
+  minutesSecondsInitialXY = [85, 155];
 }
 
 @Component({
   selector: 'circle-progress',
   template: `
-    <svg xmlns="http://www.w3.org/2000/svg" *ngIf="svg" 
+    <svg xmlns="http://www.w3.org/2000/svg" *ngIf="svg"
       [attr.height]="svg.height" [attr.width]="svg.width" (click)="emitClickEvent($event)" [attr.class]="options.class">
-      <circle *ngIf="options.showBackground" 
-        [attr.cx]="svg.backgroundCircle.cx" 
-        [attr.cy]="svg.backgroundCircle.cy" 
-        [attr.r]="svg.backgroundCircle.r" 
+      <circle *ngIf="options.showBackground"
+        [attr.cx]="svg.backgroundCircle.cx"
+        [attr.cy]="svg.backgroundCircle.cy"
+        [attr.r]="svg.backgroundCircle.r"
         [attr.fill]="svg.backgroundCircle.fill"
         [attr.fill-opacity]="svg.backgroundCircle.fillOpacity"
-        [attr.stroke]="svg.backgroundCircle.stroke" 
+        [attr.stroke]="'#000000'"
+        [attr.stroke-opacity]=0.3
         [attr.stroke-width]="svg.backgroundCircle.strokeWidth"/>
-      <circle *ngIf="options.showInnerStroke" 
-        [attr.cx]="svg.circle.cx" 
-        [attr.cy]="svg.circle.cy" 
-        [attr.r]="svg.circle.r" 
+      <circle *ngIf="options.showInnerStroke"
+        [attr.cx]="svg.circle.cx"
+        [attr.cy]="svg.circle.cy"
+        [attr.r]="svg.circle.r"
         [attr.fill]="svg.circle.fill"
-        [attr.stroke]="svg.circle.stroke" 
+        [attr.stroke]="svg.circle.stroke"
         [attr.stroke-width]="svg.circle.strokeWidth"/>
-      <path 
-        [attr.d]="svg.path.d" 
+      <path
+        [attr.d]="svg.path.d"
         [attr.stroke]="svg.path.stroke"
-        [attr.stroke-width]="svg.path.strokeWidth" 
+        [attr.stroke-width]="svg.path.strokeWidth"
         [attr.stroke-linecap]="svg.path.strokeLinecap"
         [attr.fill]="svg.path.fill"/>
-      <text *ngIf="options.showTitle || options.showUnits || options.showSubtitle" 
+      <text *ngIf="options.showContent"
         alignment-baseline="baseline"
         [attr.x]="svg.circle.cx"
         [attr.y]="svg.circle.cy"
-        [attr.text-anchor]="svg.title.textAnchor">
-        <ng-container *ngIf="options.showTitle">
-          <tspan *ngFor="let tspan of svg.title.tspans"
-            [attr.x]="svg.title.x"
-            [attr.y]="svg.title.y"
-            [attr.dy]="tspan.dy"
-            [attr.font-size]="svg.title.fontSize" 
-            [attr.fill]="svg.title.color">{{tspan.span}}</tspan>
-        </ng-container>
-        <tspan *ngIf="options.showUnits"
-          [attr.font-size]="svg.units.fontSize"
-          [attr.fill]="svg.units.color">{{svg.units.text}}</tspan>
-        <ng-container *ngIf="options.showSubtitle">
-          <tspan *ngFor="let tspan of svg.subtitle.tspans"
-            [attr.x]="svg.subtitle.x"
-            [attr.y]="svg.subtitle.y"
-            [attr.dy]="tspan.dy"
-            [attr.font-size]="svg.subtitle.fontSize"
-            [attr.fill]="svg.subtitle.color">{{tspan.span}}</tspan>
-        </ng-container>
+        >
+       <ng-container *ngIf="options.showContent && this.daysReaming > 0">
+         <tspan *ngFor="let tspan of svg.title.tspans"
+           [attr.x]=this.options.daysInitialXY[0]
+           [attr.y]=this.options.daysInitialXY[1]
+           [attr.dy]="tspan.dy"
+           [attr.font-size]="svg.title.daysHoursFontSize"
+           [attr.fill]="svg.title.color">
+             {{this.daysReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
+               [attr.fill]="svg.subtitle.color"> {{this.options.days}}</tspan>
+             {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
+               [attr.fill]="svg.subtitle.color"> {{this.options.hours}}</tspan>
+           </tspan>
+           <tspan *ngFor="let tspan of svg.title.tspans"
+             [attr.x]=this.options.minutesSecondsInitialXY[0]
+             [attr.y]=this.options.minutesSecondsInitialXY[1]
+             [attr.dy]="tspan.dy"
+             [attr.font-size]="svg.title.minutesSecondsFontSize"
+             [attr.fill]="svg.title.color">
+             {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
+               [attr.fill]="svg.subtitle.color"> {{this.options.minutes}}</tspan>
+             {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
+               [attr.fill]="svg.subtitle.color"> {{this.options.seconds}}</tspan>
+           </tspan>
+       </ng-container>
+       <ng-container *ngIf="options.showContent && this.daysReaming <= 0">
+         <tspan *ngFor="let tspan of svg.title.tspans"
+           [attr.x]=this.options.hoursInitialXY[0]
+           [attr.y]=this.options.hoursInitialXY[1]
+           [attr.dy]="tspan.dy"
+           [attr.font-size]="svg.title.daysHoursFontSize"
+           [attr.fill]="svg.title.color">
+             {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
+               [attr.fill]="svg.subtitle.color"> {{this.options.hours}}</tspan>
+           </tspan>
+           <tspan *ngFor="let tspan of svg.title.tspans"
+             [attr.x]=this.options.minutesSecondsInitialXY[0]
+             [attr.y]=this.options.minutesSecondsInitialXY[1]
+             [attr.dy]="tspan.dy"
+             [attr.font-size]="svg.title.minutesSecondsFontSize"
+             [attr.fill]="svg.title.color">
+             {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
+               [attr.fill]="svg.subtitle.color"> {{this.options.minutes}}</tspan>
+             {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
+               [attr.fill]="svg.subtitle.color"> {{this.options.seconds}}</tspan>
+           </tspan>
+       </ng-container>
       </text>
-    </svg>  
+    </svg>
   `
 })
 export class CircleProgressComponent implements OnChanges {
 
   @Output() onClick: EventEmitter<any> = new EventEmitter();
+  @Output() onCompletedTime: EventEmitter<any> = new EventEmitter();
+  @Output() isTimeReaming: EventEmitter<any> = new EventEmitter();
 
   @Input() class: string;
   @Input() backgroundColor: string;
@@ -151,14 +185,8 @@ export class CircleProgressComponent implements OnChanges {
 
   @Input() radius: number;
   @Input() space: number;
-  @Input() percent: number;
   @Input() toFixed: number;
-  @Input() maxPercent: number;
   @Input() renderOnClick: boolean;
-
-  @Input() units: string;
-  @Input() unitsFontSize: string;
-  @Input() unitsColor: string;
 
   @Input() outerStrokeWidth: number;
   @Input() outerStrokeColor: string;
@@ -170,33 +198,49 @@ export class CircleProgressComponent implements OnChanges {
   @Input() titleFormat: Function;
   @Input() title: string|Array<String>;
   @Input() titleColor: string;
-  @Input() titleFontSize: string;
-
-  @Input() subtitleFormat: Function;
-  @Input() subtitle: string|string[];
-  @Input() subtitleColor: string;
-  @Input() subtitleFontSize: string;
+  @Input() daysHoursFontSize: string;
+  @Input() minutesSecondsFontSize: string;
 
   @Input() animation: boolean;
   @Input() animateTitle: boolean;
-  @Input() animateSubtitle: boolean;
   @Input() animationDuration: number;
 
-  @Input() showTitle: boolean;
-  @Input() showSubtitle: boolean;
-  @Input() showUnits: boolean;
+  @Input() showContent: boolean;
   @Input() showBackground: boolean;
   @Input() showInnerStroke: boolean;
   @Input() clockwise: boolean;
 
+  @Input() endDate:Date;
+  @Input() initDate:Date;
+  @Input() days:string;
+  @Input() hours:string;
+  @Input() minutes:string;
+  @Input() seconds:string;
+  @Input() stringColor: string;
+  @Input() daysInitialXY:Array<number>;
+  @Input() hoursInitialXY:Array<number>;
+  @Input() minutesSecondsInitialXY:Array<number>;
+
   @Input('options') templateOptions: CircleProgressOptions;
 
   svg: any;
-  
+
   options: CircleProgressOptions = new CircleProgressOptions();
   defaultOptions: CircleProgressOptions = new CircleProgressOptions();
 
   private _timerSubscription: Subscription;
+
+  private second:number;
+  private minute:number;
+  private hour:number;
+  private day:number;
+
+  private everySecond:Subscription;
+
+  private secondsRemaining:number;
+  private minutesReaming:number;
+  private hoursReaming:number;
+  private daysReaming:number;
 
   public isDrawing(): boolean {
     return (this._timerSubscription && !this._timerSubscription.closed) ? true : false;
@@ -206,11 +250,72 @@ export class CircleProgressComponent implements OnChanges {
     defaultOptions: CircleProgressOptions) {
     Object.assign(this.options, defaultOptions);
     Object.assign(this.defaultOptions, defaultOptions);
+
+    //Earth's time system ;)
+    this.second = 1000;
+    this.minute = this.second * 60;
+    this.hour = this.minute * 60;
+    this.day = this.hour * 24;
+
+    this.setValuesReaming();
+
+    this.everySecond = Observable.interval(1000).takeWhile(() => true).subscribe(() => this.setValuesReaming());
   }
 
   ngOnChanges(changes) {
     this.render();
   }
+
+  private setValuesReaming():void{
+    let reaming:{days:number, hours:number, minutes:number, seconds:number} = this.calculateReamingTime();
+    this.secondsRemaining = reaming.seconds;
+    this.minutesReaming = reaming.minutes;
+    this.hoursReaming = reaming.hours;
+    this.daysReaming = reaming.days;
+    this.options.percent = this.calculatePercentage(this.calculateReamingTime(this.options.initDate), this.calculateReamingTime());
+  }
+
+  private calculatePercentage(remainingFromInit:{days:number, hours:number, minutes:number, seconds:number}, remainingFromNow:{days:number, hours:number, minutes:number, seconds:number}):number{
+    let milisecondsFromInit:number = this.acumulateMiliSeconds(remainingFromInit);
+    let milisecondsFromNow:number = this.acumulateMiliSeconds(remainingFromNow);
+    return Math.round(milisecondsFromNow * 100 / milisecondsFromInit);
+  }
+
+  private acumulateMiliSeconds(data:{days:number, hours:number, minutes:number, seconds:number}):number{
+    let accumulator: number = 0
+    accumulator = accumulator + data.seconds;
+    accumulator = accumulator + data.minutes * this.second;
+    accumulator = accumulator + data.hours * this.hour;
+    accumulator = accumulator + data.days * this.day;
+    return accumulator;
+  }
+
+  private calculateReamingTime(initialOptionalDate:Date = null):{days:number, hours:number, minutes:number, seconds:number}{ //Document parameter
+    let now:Date;
+    initialOptionalDate ? now = initialOptionalDate : now = new Date();
+    let distance:number =  this.options.endDate.getTime() - now.getTime();
+    if (distance < 0) {
+      let days:number = 0;
+      let hours:number = 0;
+      let minutes:number = 0;
+      let seconds:number = 0;
+      let resultado:{days:number, hours:number, minutes:number, seconds:number} = {days:days, hours:hours, minutes:minutes, seconds:seconds}
+      if(this.everySecond) this.everySecond.unsubscribe();
+      this.onCompletedTimeEmitter();
+      return resultado;
+    }
+    let days:number = Math.floor(distance / this.day);
+    let hours:number = Math.floor((distance % this.day) / this.hour);
+    let minutes:number = Math.floor((distance % this.hour) / this.minute);
+    let seconds:number = Math.floor((distance % this.minute) / this.second);
+    let resultado:{days:number, hours:number, minutes:number, seconds:number} = {days:days, hours:hours, minutes:minutes, seconds:seconds}
+    return resultado;
+  }
+
+  private onCompletedTimeEmitter():void {
+    this.onCompletedTime.emit(true);
+  }
+
 
   private applyOptions = () => {
     // the options of <circle-progress> may change already
@@ -224,7 +329,7 @@ export class CircleProgressComponent implements OnChanges {
     // make sure key options valid
     this.options.radius = Math.abs(+this.options.radius);
     this.options.space = +this.options.space;
-    this.options.percent = Math.abs(+this.options.percent);
+    this.options.percent = this.calculatePercentage(this.calculateReamingTime(this.options.initDate), this.calculateReamingTime());
     this.options.maxPercent = Math.abs(+this.options.maxPercent);
     this.options.animationDuration = Math.abs(this.options.animationDuration);
     this.options.outerStrokeWidth = Math.abs(+this.options.outerStrokeWidth);
@@ -265,7 +370,7 @@ export class CircleProgressComponent implements OnChanges {
     // get the end point of the arc
     let endPoint = this.polarToCartesian(centre.x, centre.y, this.options.radius, 360 * (this.options.clockwise ? circlePercent : (100 - circlePercent)) / 100);  // ####################
     // We'll get an end point with the same [x, y] as the start point when percent is 100%, so move x a little bit.
-    if (circlePercent === 100) { 
+    if (circlePercent === 100) {
       endPoint.x = endPoint.x + (this.options.clockwise ? -0.01 : +0.01);
     }
     // largeArcFlag and sweepFlag
@@ -282,11 +387,13 @@ export class CircleProgressComponent implements OnChanges {
     let subtitlePercent = this.options.animateSubtitle ? percent : this.options.percent;
     // get title object
     let title = {
-      x: centre.x,
+      //x: centre.x, NEW VALUE
+      x: 55,
       y: centre.y,
-      textAnchor: 'middle',
+      textAnchor: 'middle', //No USED MORE
       color: this.options.titleColor,
-      fontSize: this.options.titleFontSize,
+      daysHoursFontSize: this.options.daysHoursFontSize,
+      minutesSecondsFontSize: this.options.minutesSecondsFontSize,
       texts: [],
       tspans: []
     };
@@ -312,49 +419,20 @@ export class CircleProgressComponent implements OnChanges {
     // get subtitle object
     let subtitle = {
       x: centre.x,
-      y: centre.y,
+      y: centre.y + (+centre.y) + (+this.options.daysHoursFontSize),
       textAnchor: 'middle',
-      color: this.options.subtitleColor,
-      fontSize: this.options.subtitleFontSize,
+      color: this.options.stringColor,
       texts: [],
       tspans: []
     }
-    // from v0.9.9, both subtitle and subtitleFormat(...) may be an array of string.
-    if(this.options.subtitleFormat !== undefined && this.options.subtitleFormat.constructor.name === 'Function'){
-      let formatted = this.options.subtitleFormat(subtitlePercent);
-      if(formatted instanceof Array){
-        subtitle.texts = [...formatted];
-      }else{
-        subtitle.texts.push(formatted.toString());
-      }
-    }else{
-      if(this.options.subtitle instanceof Array){
-        subtitle.texts = [...this.options.subtitle]
-      }else{
-        subtitle.texts.push(this.options.subtitle.toString());
-      }
-    }
-    // get units object
-    let units = {
-      text: `${this.options.units}`,
-      fontSize: this.options.unitsFontSize,
-      color: this.options.unitsColor
-    }
     // get total count of text lines to be shown
     let rowCount = 0, rowNum = 1;
-    this.options.showTitle && (rowCount += title.texts.length);
-    this.options.showSubtitle && (rowCount += subtitle.texts.length);
+    this.options.showContent && (rowCount += title.texts.length);
+    this.options.showContent && (rowCount += subtitle.texts.length);
     // calc dy for each tspan for title
-    if(this.options.showTitle){
+    if(this.options.showContent){
       for(let span of title.texts){
         title.tspans.push({span: span, dy: this.getRelativeY(rowNum, rowCount)});
-        rowNum++;
-      }
-    }
-    // calc dy for each tspan for subtitle
-    if(this.options.showSubtitle){
-      for(let span of subtitle.texts){
-        subtitle.tspans.push({span: span, dy: this.getRelativeY(rowNum, rowCount)})
         rowNum++;
       }
     }
@@ -373,7 +451,7 @@ export class CircleProgressComponent implements OnChanges {
       },
       path: {
         // A rx ry x-axis-rotation large-arc-flag sweep-flag x y (https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths#Arcs)
-        d: `M ${startPoint.x} ${startPoint.y} 
+        d: `M ${startPoint.x} ${startPoint.y}
         A ${this.options.radius} ${this.options.radius} 0 ${largeArcFlag} ${sweepFlag} ${endPoint.x} ${endPoint.y}`,
         stroke: this.options.outerStrokeColor,
         strokeWidth: this.options.outerStrokeWidth,
@@ -389,7 +467,6 @@ export class CircleProgressComponent implements OnChanges {
         strokeWidth: this.options.innerStrokeWidth,
       },
       title: title,
-      units: units,
       subtitle: subtitle,
     };
   }
