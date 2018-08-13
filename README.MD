@@ -1,21 +1,20 @@
-# ng-circle-progress
+# ng-circle-progress-day-countdown
+* Fork from [bootsoon/ng-circle-progress](https://github.com/bootsoon/ng-circle-progress)
 
 ## Demo
-
-[Try out the demo!](https://bootsoon.github.io/ng-circle-progress/)
 
 [![demo](https://raw.githubusercontent.com/bootsoon/ng-circle-progress/master/demo.png)](https://bootsoon.github.io/ng-circle-progress/)
 
 ## About
 
-It is a simple circle progress component created for Angular 4 based only on SVG graphics and has various of options to customize it.
+It is a simple circle day progress component created for Angular 4 based only on SVG graphics and has various of options to customize it.
 
 ## Installation
 
 To install this library, run:
 
 ```bash
-$ npm install ng-circle-progress --save
+$ npm i ng-circle-progress-day-countdown
 ```
 
 Once you have installed it, you can import it in any Angular application,
@@ -62,7 +61,8 @@ Once NgCircleProgressModule is imported, you can use CircleProgressComponent in 
 ```xml
 <!-- You can now use it in app.component.html -->
 <circle-progress
-  [percent]="85"
+  [endDate]="endDate"
+  [initDate]="initDate"
   [radius]="100"
   [outerStrokeWidth]="16"
   [innerStrokeWidth]="8"
@@ -78,13 +78,8 @@ Once NgCircleProgressModule is imported, you can use CircleProgressComponent in 
 
 Option | Type | Default | Description
 --- | --- | --- | ---
-percent | `number` | `0` | Number of percent you want to show
-maxPercent | `number` | `1000` | Max number of percent you want to show
 radius | `number` | `90` | Radius of circle
 clockwise | `boolean` | `true` | Whether to rotate clockwise or counter-clockwise
-showTitle | `boolean` | `true` | Whether to display title
-showSubtitle | `boolean` | `true` | Whether to display subtitle
-showUnits | `boolean` | `true` | Whether to display units
 showBackground | `boolean` | `true` | Whether to display background circle
 showInnerStroke | `boolean` | `true` | Whether to display inner stroke
 backgroundStroke | `string` | `'transparent'` | Background stroke color
@@ -95,42 +90,42 @@ backgroundOpacity | `number` | `1` | Opacity of background color
 space | `number` | `4` | Space between outer circle and inner circle
 toFixed | `number` | `0` | Using fixed digital notation in Title
 renderOnClick | `boolean` | `true` | Render when component is clicked
-units | `string` | `'%'` | Units showed aside the title
-unitsFontSize | `string` | `'10'` | Font size of units
-unitsColor | `string` | `'#444444'` | Font color of units
+unitsColor | `string` | `'#444444'` | Font color of 'day', 'hour', etc. strings
 outerStrokeWidth | `number` | `8` | Stroke width of outer circle (progress circle)
 outerStrokeColor | `sting` | `'#78C000'` | Stroke color of outer circle
 outerStrokeLinecap | `sting` | `'round'` | Stroke linecap of outer circle. Possible values(butt, round, square, inherit)
 innerStrokeWidth | `number` | `4` | Stroke width of inner circle
 innerStrokeColor | `sting` | `'#C7E596'` | Stroke color of inner circle
-title | `string\|Array<String>` | `'auto'` | text showed as title. Percentage is displayed when title equals 'auto'.
-titleFormat | `Function` | `undefined` | A callback function to format title. It returns a string or an array of string.
-titleColor | `string` | `'#444444'` | Font color of title
-titleFontSize | `string` | `'20'` | Font size of title
-subtitle | `string\|Array<String>` | `'Percent'` | text showed as subtitle
-subtitleFormat | `Function` | `undefined` | A callback function to format subtitle. It returns a string or an array of string.
-subtitleColor | `string` | `'#A9A9A9'` | Font color of subtitle
-subtitleFontSize | `string` | `'10'` | Font size of subtitle
+titleColor | `string` | `'#444444'` | Font color of 'day', 'hour', etc. values
+titleFontSize | `string` | `'20'` | Font size of 'day', 'hour', etc. values
+subtitleFontSize | `string` | `'10'` | Font size of 'day', 'hour', etc. strings
 animation | `boolean` | `true` | Whether to animate the outer circle when rendering
 animateTitle | `boolean` | `true` | Whether to animate the title when rendering
-animateSubtitle | `boolean` | `false` | Whether to animate the subtitle when rendering
 animationDuration | `number` | `500` | Duration of animation in microseconds
 class | `string` | `''` | CSS class name for SVG element
+initDate | `Date` | `new Date ('04/15/2018 10:0 AM')` | Init date of the percent
+endDate| `Date` | `new Date ('08/14/2021 10:0 AM')` | End date of the percent
+stringColor| `string` | `'#A9A9A9'` | Font color of 'day', 'hour', etc. strings
+daysHoursFontSize| `string` | `'20'` | Font size of the first line
+minutesSecondsFontSize| `string` | `'15'` | Font size of the second line
+showContent | `boolean` | `true` | Display or not the remaining days
+days| `string` | `'days'` | Day string value
+hours| `string` | `'hours'` | Hours string value
+minutes| `string` | `'min'` | Minutes string value
+seconds| `string` | `'sec'` | Seconds string value
 
+Event: `onCompletedTime` triggered on 0 days, 0 hours, 0 minutes, 0 seconds reaming
 
-```typescript
-// subtitleFormat callback example
-formatSubtitle = (percent: number) : string => {
-  if(percent >= 100){
-    return "Congratulations!"
-  }else if(percent >= 50){
-    return "Half"
-  }else if(percent > 0){
-    return "Just began"
-  }else {
-    return "Not started"
-  }
-}
+```xml
+<!-- You can now use it in app.component.html -->
+<circle-progress
+  [endDate]="endDate"
+  [initDate]="initDate"
+  [radius]="100"
+  [outerStrokeWidth]="16"
+  ...
+  (onCompletedTime)="completedTimeEventHandler($event)"
+></circle-progress>
 
 ```
 
@@ -153,4 +148,3 @@ $ npm run lint
 MIT © [bootsoon](mailto:bootsoon@aliyun.com)
 
 This project was generated by [Yeoman generator angular2-library](https://github.com/jvandemo/generator-angular2-library)
-

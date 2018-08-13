@@ -2,12 +2,6 @@ import { Component, ViewChild, OnChanges, Input, Output, EventEmitter } from '@a
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Rx';
 
-// TODO:
-// Cuando falten minutos solamentes, que aparezcan bien grandes junto con los segundos!
-
-// Change the type of var timer to the correct.
-
-
 export interface CircleProgressOptionsInterface {
   class?: string;
   backgroundColor?: string;
@@ -91,7 +85,7 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
   stringColor = '#e6ea00';
   daysInitialXY = [68, 125];
   hoursInitialXY = [90, 125];
-  minutesSecondsInitialXY= [85, 155];
+  minutesSecondsInitialXY = [85, 155];
 }
 
 @Component({
