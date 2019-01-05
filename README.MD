@@ -3,7 +3,9 @@
 
 ## Demo
 
-[![demo](https://raw.githubusercontent.com/bootsoon/ng-circle-progress/master/demo.png)](https://bootsoon.github.io/ng-circle-progress/)
+| | |
+--- | --- | ---
+![screenshot_20180613-141150_fixture russia 2018](https://user-images.githubusercontent.com/14917667/50729185-5d122880-1114-11e9-8597-090088a7918c.jpg) | ![screenshot_20180613-141930_fixture russia 2018](https://user-images.githubusercontent.com/14917667/50729186-5d122880-1114-11e9-84ff-3ddb6a10ee96.jpg) | ![screenshot_20180803-173749_fixture russia 2018](https://user-images.githubusercontent.com/14917667/50729187-5d122880-1114-11e9-90f5-1bce8756cdd7.jpg)
 
 ## About
 
@@ -113,9 +115,9 @@ days| `string` | `'days'` | Day string value
 hours| `string` | `'hours'` | Hours string value
 minutes| `string` | `'min'` | Minutes string value
 seconds| `string` | `'sec'` | Seconds string value
-daysInitialXY| Array<number> | [68, 125] | First value represent position in `X` axis and second represent `Y` axis of remaining days value
-hoursInitialXY| Array<number> | [90, 125] | First value represent position in `X` axis and second represent `Y` axis of remaining hours value
-minutesSecondsInitialXY| Array<number> | [85, 155] | First value represent position in `X` axis and second represent `Y` axis of remaining minutes and seconds value
+daysInitialXY| `Array<number>` | [68, 125] | First value represent position in `X` axis and second represent `Y` axis of remaining days value
+hoursInitialXY| `Array<number>` | [90, 125] | First value represent position in `X` axis and second represent `Y` axis of remaining hours value
+minutesSecondsInitialXY| `Array<number>` | [85, 155] | First value represent position in `X` axis and second represent `Y` axis of remaining minutes and seconds value
 
 
 Event: `onCompletedTime` triggered on 0 days, 0 hours, 0 minutes, 0 seconds remaining
