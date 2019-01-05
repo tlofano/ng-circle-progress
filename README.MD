@@ -113,8 +113,12 @@ days| `string` | `'days'` | Day string value
 hours| `string` | `'hours'` | Hours string value
 minutes| `string` | `'min'` | Minutes string value
 seconds| `string` | `'sec'` | Seconds string value
+daysInitialXY| Array<number> | [68, 125] | First value represent position in `X` axis and second represent `Y` axis of remaining days value
+hoursInitialXY| Array<number> | [90, 125] | First value represent position in `X` axis and second represent `Y` axis of remaining hours value
+minutesSecondsInitialXY| Array<number> | [85, 155] | First value represent position in `X` axis and second represent `Y` axis of remaining minutes and seconds value
 
-Event: `onCompletedTime` triggered on 0 days, 0 hours, 0 minutes, 0 seconds reaming
+
+Event: `onCompletedTime` triggered on 0 days, 0 hours, 0 minutes, 0 seconds remaining
 
 ```xml
 <!-- You can now use it in app.component.html -->
