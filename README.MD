@@ -3,7 +3,7 @@
 
 ## Demo
 
-| | |
+ example 1| example 2 | example 3
 --- | --- | ---
 ![screenshot_20180613-141150_fixture russia 2018](https://user-images.githubusercontent.com/14917667/50729185-5d122880-1114-11e9-8597-090088a7918c.jpg) | ![screenshot_20180613-141930_fixture russia 2018](https://user-images.githubusercontent.com/14917667/50729186-5d122880-1114-11e9-84ff-3ddb6a10ee96.jpg) | ![screenshot_20180803-173749_fixture russia 2018](https://user-images.githubusercontent.com/14917667/50729187-5d122880-1114-11e9-90f5-1bce8756cdd7.jpg)
 
