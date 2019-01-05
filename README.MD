@@ -27,8 +27,8 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
-// Import ng-circle-progress
-import { NgCircleProgressModule } from 'ng-circle-progress';
+// Import ng-circle-progress-day-countdown
+import { NgCircleProgressModule } from 'ng-circle-progress-day-countdown';
 
 @NgModule({
   declarations: [
