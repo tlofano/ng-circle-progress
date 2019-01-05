@@ -128,9 +128,9 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
            [attr.font-size]="svg.title.daysHoursFontSize"
            [attr.fill]="svg.title.color">
              {{this.daysReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
-               [attr.fill]="svg.subtitle.color"> {{this.options.days}}</tspan>
+               [attr.fill]="svg.title.color"> {{this.options.days}}</tspan>
              {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
-               [attr.fill]="svg.subtitle.color"> {{this.options.hours}}</tspan>
+               [attr.fill]="svg.title.color"> {{this.options.hours}}</tspan>
            </tspan>
            <tspan *ngFor="let tspan of svg.title.tspans"
              [attr.x]=this.options.minutesSecondsInitialXY[0]
@@ -139,9 +139,9 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
              [attr.font-size]="svg.title.minutesSecondsFontSize"
              [attr.fill]="svg.title.color">
              {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
-               [attr.fill]="svg.subtitle.color"> {{this.options.minutes}}</tspan>
+               [attr.fill]="svg.title.color"> {{this.options.minutes}}</tspan>
              {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
-               [attr.fill]="svg.subtitle.color"> {{this.options.seconds}}</tspan>
+               [attr.fill]="svg.title.color"> {{this.options.seconds}}</tspan>
            </tspan>
        </ng-container>
        <ng-container *ngIf="options.showContent && this.daysReaming <= 0">
@@ -152,7 +152,7 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
            [attr.font-size]="svg.title.daysHoursFontSize"
            [attr.fill]="svg.title.color">
              {{this.hoursReaming}}<tspan [attr.font-size]="svg.subtitle.daysHoursFontSize"
-               [attr.fill]="svg.subtitle.color"> {{this.options.hours}}</tspan>
+               [attr.fill]="svg.title.color"> {{this.options.hours}}</tspan>
            </tspan>
            <tspan *ngFor="let tspan of svg.title.tspans"
              [attr.x]=this.options.minutesSecondsInitialXY[0]
@@ -161,9 +161,9 @@ export class CircleProgressOptions implements CircleProgressOptionsInterface {
              [attr.font-size]="svg.title.minutesSecondsFontSize"
              [attr.fill]="svg.title.color">
              {{this.minutesReaming}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
-               [attr.fill]="svg.subtitle.color"> {{this.options.minutes}}</tspan>
+               [attr.fill]="svg.title.color"> {{this.options.minutes}}</tspan>
              {{this.secondsRemaining}}<tspan [attr.font-size]="svg.subtitle.minutesSecondsFontSize"
-               [attr.fill]="svg.subtitle.color"> {{this.options.seconds}}</tspan>
+               [attr.fill]="svg.title.color"> {{this.options.seconds}}</tspan>
            </tspan>
        </ng-container>
       </text>
